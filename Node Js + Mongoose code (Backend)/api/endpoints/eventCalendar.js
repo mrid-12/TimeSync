@@ -4,7 +4,9 @@ const router = express.Router()
 const eventController = require('./../controllers/eventCalendar');
 
 router
-.get('/get', eventController.getcurrEvents)
-.get('/getall', eventController.getAllEventsForUser)
+    .get('/eget/:id', eventController.getcurrEvents)
+    .get('/egetall/:id', eventController.getAllEventsForUser)
+    .post('/ecreate', eventController.createEvent)
+    .delete('/edelete',eventController.deleteEvent);
 
 module.exports = router;

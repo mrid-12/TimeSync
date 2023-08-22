@@ -7,18 +7,20 @@ const getUsers = function (req, res, next) {
     }, (err) => {
         console.log(err);
         res.status(400);
-        res.send("Unable to fectch users");
+        res.send("Unable to fetch users");
     });
 }
 
-const getUserById = function (req, res, next) {
-    User.findById(req.query.userId).then((doc) => {
+
+const getIdByUser = function (req, res, next) {
+    User.find({name:req.params.name}).then((doc) => {
         //    User.find({_id: req.query.userId}).then((doc) => {
         res.status(200);
-        res.json(doc);
+        res.json(doc);  
     }, (err) => {
+        console.log(err),
         res.status(400);
-        res.send("Unable to fectch user");
+        res.send("User does not exist !");
     });
 }
 
@@ -26,17 +28,22 @@ const createUser = function (req, res, next) {
     var user = new User(req.body);
     user.save().then(() => {
         res.status(201);
-        res.send("User created successfully");
+        res.json({
+            "message":"User created successfully",
+            "id": user._id}
+            );
     }, err => {
         if (err.code === 11000) {
             res.status(400);
-            res.send("Duplicate Entry");
+            res.send("Username is already taken");
+        }else{
+            console.log(err),
+            res.status(400);
+            res.send("Unable to create now");
         }
-        res.status(400);
-        res.send("Unable to create now");
     })
 }
 
 module.exports = {
-    getUsers, getUserById, createUser
+    getUsers, getIdByUser, createUser
 }
